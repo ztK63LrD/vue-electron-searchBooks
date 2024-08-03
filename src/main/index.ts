@@ -2,12 +2,14 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+// 屏蔽警告
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 350,
-    height: 450,
+    width: 800,
+    height: 600,
     show: false,
     frame: false, // 无边框模式
     resizable: false, // 不可缩放
@@ -15,7 +17,10 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      webSecurity: false, // 允许跨域
+      contextIsolation: true, // 禁用上下文隔离
+      nodeIntegration: true, // 开启 nodejs
     }
   })
 
